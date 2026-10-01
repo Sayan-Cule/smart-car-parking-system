@@ -1,7 +1,7 @@
 #define RXp2 16
 #define TXp2 17
 
-#include "thingProperties.h"
+#include "thingProperties.h"  // Add your own Arduino IoT Cloud configuration
 
 void setup() {
   Serial.begin(115200);
@@ -10,7 +10,6 @@ void setup() {
 
   initProperties();
 
-  // Connect to Arduino IoT Cloud
   ArduinoCloud.begin(ArduinoIoTPreferredConnection);
 
   setDebugMessageLevel(2);
