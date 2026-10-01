@@ -1,12 +1,34 @@
 # Smart Car Parking System
 
-An IoT-based smart parking prototype developed using Arduino, ultrasonic sensors, a servo motor, and an ESP32.
+An IoT-based smart parking prototype developed using **Arduino UNO, HC-SR04 ultrasonic sensors, a servo motor, and ESP32**.
 
 ## Overview
 
 The system uses ultrasonic sensors to detect vehicle presence in parking spaces and at the entrance. Based on slot availability, the Arduino controls a servo-operated gate and sends parking status messages over serial communication.
 
-The original academic project also included an Arduino IoT Cloud component.
+The original academic project also included an **Arduino IoT Cloud** component for displaying parking and gate status.
+
+## System Architecture
+
+```mermaid
+flowchart LR
+    S1[Slot 1<br/>HC-SR04] --> A[Arduino UNO]
+    S2[Slot 2<br/>HC-SR04] --> A
+    G[Gate Sensor<br/>HC-SR04] --> A
+    A --> M[Servo Motor<br/>Gate Control]
+    A -->|Serial communication| E[ESP32]
+    E --> C[Arduino IoT Cloud]
+    C --> D[Cloud Dashboard]
+```
+
+## How It Works
+
+1. Two ultrasonic sensors monitor the parking slots.
+2. A third ultrasonic sensor detects a vehicle at the entrance.
+3. The Arduino determines whether a parking slot is available.
+4. If a vehicle is detected and a slot is available, the servo opens the gate.
+5. The Arduino sends slot and gate messages over serial communication.
+6. The ESP32 side handles the serial/cloud portion of the original project.
 
 ## Hardware
 
@@ -14,7 +36,8 @@ The original academic project also included an Arduino IoT Cloud component.
 - HC-SR04 ultrasonic sensors
 - Servo motor
 - ESP32
-- Breadboard and connecting wires
+- Breadboard
+- Connecting wires
 - Power supply
 
 ## Software
@@ -38,42 +61,60 @@ smart-car-parking-system/
         └── esp.ino
 ```
 
-## How It Works
+## Source Code
 
-1. Two ultrasonic sensors monitor the parking slots.
-2. A third ultrasonic sensor detects a vehicle at the entrance.
-3. The Arduino determines whether a slot is available.
-4. If a vehicle is detected and a slot is available, the servo opens the gate.
-5. The Arduino reports slot status and parking information over serial communication.
-6. The ESP32 sketch provides the serial/debug side of the system.
+### Arduino
 
-## Current Arduino Implementation
+`src/arduino/parking.ino` contains the main parking logic:
 
-The available `parking.ino` actively checks **two parking slots** and one gate sensor. A third-slot implementation remains in the source as commented-out code.
+- Reads the two active parking-slot ultrasonic sensors.
+- Reads the entrance/gate ultrasonic sensor.
+- Determines available slots.
+- Opens/closes the gate using the servo.
+- Sends slot and vehicle-status messages through Serial.
 
-The gate servo is controlled using:
-- `servo.write(0)` to open
-- `servo.write(90)` to close
+The available implementation actively checks **two parking slots**. A third-slot implementation remains commented out in the source.
 
-## Arduino Dependencies
+### ESP32
 
-The Arduino sketch uses:
+`src/esp32/esp.ino` is the available ESP32-side sketch. It defines GPIO 16 and 17 for the intended serial interface, while the `Serial2` initialization is currently commented out in the available file.
 
-- NewPing
-- Servo
-
-Install the required libraries through the Arduino IDE before compiling.
+The original Cloud-connected implementation used an Arduino IoT Cloud-generated `thingProperties.h` file, which is not available in this repository.
 
 ## Pin Connections
 
 See [docs/pin-connections.md](docs/pin-connections.md).
 
+## Arduino Dependencies
+
+The Arduino parking sketch uses:
+
+- **NewPing**
+- **Servo**
+
+Install the required libraries through the Arduino IDE before compiling.
+
+## Prototype
+
+The original project included a physical prototype demonstrating:
+
+- Both parking slots empty
+- One parking slot occupied
+- Both parking slots occupied
+- Vehicle detection at the gate
+- Slot assignment/status displayed through the Cloud dashboard
+
+Prototype and dashboard screenshots can be added to `docs/images/` when needed.
+
 ## Arduino IoT Cloud
 
-The original project included an Arduino IoT Cloud dashboard and ESP32 cloud integration. The Cloud-generated `thingProperties.h` configuration and account-specific settings are not included because they are not part of the available source files.
+The original project included an Arduino IoT Cloud dashboard with status indicators for the parking slots and vehicle/gate state.
 
-No credentials, API keys, or account configuration are included in this repository.
+The Cloud-generated `thingProperties.h` configuration and account-specific settings are **not included** because the original Cloud project is no longer accessible.
+
+**No credentials, API keys, passwords, or account configuration should be committed to this repository.**
 
 ## Project Status
 
-This repository contains the source code currently available from the original academic project and is maintained as a portfolio/interview reference.
+This repository preserves the source code currently available from the original academic project and is maintained as a portfolio/interview reference.
+
