@@ -91,7 +91,6 @@ The required `thingProperties.h` file is **not included** because it is generate
 
 To use the ESP32 Cloud sketch, create/configure your own Arduino IoT Cloud Thing and add your generated `thingProperties.h` file.
 
-> **Note:** Do not commit Wi-Fi credentials, API keys, passwords, or other account-specific secrets to GitHub.
 
 ## Pin Connections
 
