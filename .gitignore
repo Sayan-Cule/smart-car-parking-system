@@ -1,0 +1,16 @@
+# Arduino build/output
+*.hex
+*.elf
+*.bin
+build/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Arduino IoT Cloud / secrets
+thingProperties.h
+arduino_secrets.h
+.env
